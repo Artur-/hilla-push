@@ -6,6 +6,7 @@ import { HelloEndpoint } from 'Frontend/generated/endpoints';
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import '@vaadin/vaadin-charts'
+import 'github-corner'
 
 @customElement('main-view')
 export class MainView extends LitElement {
@@ -20,13 +21,13 @@ export class MainView extends LitElement {
   async connectedCallback() {
     super.connectedCallback();
     this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
-    HelloEndpoint.countTo(5,500).onData(value => {
+    HelloEndpoint.countTo(5, 500).onData(value => {
       this.number = value;
     });
-    HelloEndpoint.countTo(10,200).onData(value => {
+    HelloEndpoint.countTo(10, 200).onData(value => {
       this.number2 = value;
     });
-    HelloEndpoint.random(10,15).onData(value => {
+    HelloEndpoint.random(10, 15).onData(value => {
       this.series1 = [...this.series1, value];
     });
 
@@ -34,6 +35,10 @@ export class MainView extends LitElement {
 
   render() {
     return html`
+    <github-corner>
+  <a href="https://github.com/Artur-/hilla-push">GitHub</a>
+</github-corner>
+
     <p>Counting slowly to 5: ${this.number}</p>
     <p>Counting quickly to 10: ${this.number2}</p>
     <vaadin-chart type="spline" title="Numbers from the server" tooltip>

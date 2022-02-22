@@ -120,6 +120,7 @@
     "@vaadin/virtual-list": "23.0.0-beta3",
     "@webcomponents/shadycss": "1.9.6",
     "construct-style-sheets-polyfill": "3.0.4",
+    "github-corner": "^2.0.3",
     "line-awesome": "1.3.0",
     "lit": "2.1.4",
     "mobx": "^6.3.5"
@@ -270,7 +271,8 @@
     "lit": "$lit",
     "mobx": "$mobx",
     "@hilla/form": "$@hilla/form",
-    "@hilla/frontend": "$@hilla/frontend"
+    "@hilla/frontend": "$@hilla/frontend",
+    "github-corner": "$github-corner"
   },
   "vaadin": {
     "dependencies": {
@@ -414,6 +416,6 @@
       "workbox-precaching": "6.4.2",
       "workbox-webpack-plugin": "6.4.2"
     },
-    "hash": "2cc0537305960912aa729b89e530c277b1bb288d037bbe897d9fe2640c22d2a5"
+    "hash": "3a96ce80cb0539b42c3b567e18e3cc1dfe9be0fa798c2c60f4fc803fc04e3975"
   }
 }
