@@ -36,20 +36,16 @@ export class MainView extends LitElement {
   render() {
     return html`
     <github-corner>
-  <a href="https://github.com/Artur-/hilla-push">GitHub</a>
-</github-corner>
+      <a href="https://github.com/Artur-/hilla-push">GitHub</a>
+    </github-corner>
 
     <p>Counting slowly to 5: ${this.number}</p>
     <p>Counting quickly to 10: ${this.number2}</p>
     <vaadin-chart type="spline" title="Numbers from the server" tooltip>
       <vaadin-chart-series name="Random numbers between 0 and 15" .values=${this.series1}></vaadin-chart-series>
     </vaadin-chart>
-    <vaadin-chart type="area">
-      <vaadin-chart-series>
-        </vaadin-chart-series>
-        </vaadin-chart>
-      <vaadin-text-field label="Your name" @value-changed=${this.nameChanged}></vaadin-text-field>
-      <vaadin-button @click=${this.sayHello}>Say hello</vaadin-button>
+    <vaadin-text-field label="Your name" @value-changed=${this.nameChanged}></vaadin-text-field>
+    <vaadin-button @click=${this.sayHello}>Say hello</vaadin-button>
     `;
   }
 
