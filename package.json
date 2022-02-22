@@ -3,6 +3,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@adobe/lit-mobx": "2.0.0",
+    "@hilla/form": "0.0.19",
+    "@hilla/frontend": "0.0.19",
     "@polymer/iron-a11y-announcer": "3.0.2",
     "@polymer/iron-icon": "3.0.1",
     "@polymer/iron-iconset-svg": "3.0.1",
@@ -78,7 +80,6 @@
     "@vaadin/vaadin-confirm-dialog": "23.0.0-beta3",
     "@vaadin/vaadin-context-menu": "23.0.0-beta3",
     "@vaadin/vaadin-cookie-consent": "23.0.0-beta3",
-    "@vaadin/vaadin-core-shrinkwrap": "23.0.0-beta3",
     "@vaadin/vaadin-crud": "23.0.0-beta3",
     "@vaadin/vaadin-custom-field": "23.0.0-beta3",
     "@vaadin/vaadin-date-picker": "23.0.0-beta3",
@@ -106,7 +107,6 @@
     "@vaadin/vaadin-radio-button": "23.0.0-beta3",
     "@vaadin/vaadin-rich-text-editor": "23.0.0-beta3",
     "@vaadin/vaadin-select": "23.0.0-beta3",
-    "@vaadin/vaadin-shrinkwrap": "23.0.0-beta3",
     "@vaadin/vaadin-split-layout": "23.0.0-beta3",
     "@vaadin/vaadin-tabs": "23.0.0-beta3",
     "@vaadin/vaadin-template-renderer": "23.0.0-beta3",
@@ -120,9 +120,8 @@
     "@vaadin/virtual-list": "23.0.0-beta3",
     "@webcomponents/shadycss": "1.9.6",
     "construct-style-sheets-polyfill": "3.0.4",
-    "date-fns": "2.23.0",
     "line-awesome": "1.3.0",
-    "lit": "2.0.0",
+    "lit": "2.1.4",
     "mobx": "^6.3.5"
   },
   "devDependencies": {
@@ -145,7 +144,7 @@
     "typescript": "4.5.3",
     "webpack": "4.46.0",
     "webpack-cli": "4.9.2",
-    "webpack-dev-server": "4.7.3",
+    "webpack-dev-server": "4.7.4",
     "webpack-merge": "4.2.2",
     "workbox-core": "6.4.2",
     "workbox-precaching": "6.4.2",
@@ -261,10 +260,22 @@
     "@vaadin/vaadin-cookie-consent": "$@vaadin/vaadin-cookie-consent",
     "@vaadin/vaadin-crud": "$@vaadin/vaadin-crud",
     "@vaadin/vaadin-grid-pro": "$@vaadin/vaadin-grid-pro",
-    "@vaadin/vaadin-rich-text-editor": "$@vaadin/vaadin-rich-text-editor"
+    "@vaadin/vaadin-rich-text-editor": "$@vaadin/vaadin-rich-text-editor",
+    "@vaadin/map": "$@vaadin/map",
+    "@adobe/lit-mobx": "$@adobe/lit-mobx",
+    "@polymer/polymer": "$@polymer/polymer",
+    "@vaadin/common-frontend": "$@vaadin/common-frontend",
+    "construct-style-sheets-polyfill": "$construct-style-sheets-polyfill",
+    "line-awesome": "$line-awesome",
+    "lit": "$lit",
+    "mobx": "$mobx",
+    "@hilla/form": "$@hilla/form",
+    "@hilla/frontend": "$@hilla/frontend"
   },
   "vaadin": {
     "dependencies": {
+      "@hilla/form": "0.0.19",
+      "@hilla/frontend": "0.0.19",
       "@polymer/iron-a11y-announcer": "3.0.2",
       "@polymer/iron-icon": "3.0.1",
       "@polymer/iron-iconset-svg": "3.0.1",
@@ -339,7 +350,6 @@
       "@vaadin/vaadin-confirm-dialog": "23.0.0-beta3",
       "@vaadin/vaadin-context-menu": "23.0.0-beta3",
       "@vaadin/vaadin-cookie-consent": "23.0.0-beta3",
-      "@vaadin/vaadin-core-shrinkwrap": "23.0.0-beta3",
       "@vaadin/vaadin-crud": "23.0.0-beta3",
       "@vaadin/vaadin-custom-field": "23.0.0-beta3",
       "@vaadin/vaadin-date-picker": "23.0.0-beta3",
@@ -367,7 +377,6 @@
       "@vaadin/vaadin-radio-button": "23.0.0-beta3",
       "@vaadin/vaadin-rich-text-editor": "23.0.0-beta3",
       "@vaadin/vaadin-select": "23.0.0-beta3",
-      "@vaadin/vaadin-shrinkwrap": "23.0.0-beta3",
       "@vaadin/vaadin-split-layout": "23.0.0-beta3",
       "@vaadin/vaadin-tabs": "23.0.0-beta3",
       "@vaadin/vaadin-template-renderer": "23.0.0-beta3",
@@ -381,8 +390,7 @@
       "@vaadin/virtual-list": "23.0.0-beta3",
       "@webcomponents/shadycss": "1.9.6",
       "construct-style-sheets-polyfill": "3.0.4",
-      "date-fns": "2.23.0",
-      "lit": "2.0.0"
+      "lit": "2.1.4"
     },
     "devDependencies": {
       "chokidar": "^3.5.0",
@@ -400,12 +408,12 @@
       "typescript": "4.5.3",
       "webpack": "4.46.0",
       "webpack-cli": "4.9.2",
-      "webpack-dev-server": "4.7.3",
+      "webpack-dev-server": "4.7.4",
       "webpack-merge": "4.2.2",
       "workbox-core": "6.4.2",
       "workbox-precaching": "6.4.2",
       "workbox-webpack-plugin": "6.4.2"
     },
-    "hash": "8a42271e229dd53c678a1a28b307b4b289b754465b5b1b31e681d43b613a2aa4"
+    "hash": "2cc0537305960912aa729b89e530c277b1bb288d037bbe897d9fe2640c22d2a5"
   }
 }
