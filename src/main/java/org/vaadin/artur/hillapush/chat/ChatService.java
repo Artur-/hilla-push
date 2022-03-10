@@ -1,6 +1,7 @@
 package org.vaadin.artur.hillapush.chat;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 
 import javax.annotation.PostConstruct;
@@ -34,7 +35,8 @@ public class ChatService {
     }
 
     public void send(String message) {
-        chatSink.emitNext(LocalTime.now().with(ChronoField.MILLI_OF_SECOND, 0) + ": " + message, (a, b) -> false);
+        String timestamp = LocalTime.now().with(ChronoField.MILLI_OF_SECOND, 0).format(DateTimeFormatter.ISO_TIME);
+        chatSink.emitNext(timestamp + ": " + message, (a, b) -> false);
     }
 
 }

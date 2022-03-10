@@ -28,13 +28,15 @@ export class ChatView extends LitElement {
     <div style="flex-grow: 1;overflow:auto;">
     ${this.messages.map(message => html`<div>${message}</div>`)}
     </div>
-    <vaadin-text-field id="message" @keydown=${this.messageKey}></vaadin-text-field>
+    <vaadin-text-field id="message" autocomplete="off" @keydown=${this.messageKey}></vaadin-text-field>
     `;
   }
 
   private messageKey(e: KeyboardEvent) {
     if (e.key == "Enter") {
-      ChatEndpoint.sendMessage(this.message.value);
+      if (this.message.value.trim().length > 0) {
+        ChatEndpoint.sendMessage(this.message.value);
+      }
       this.message.clear();
     }
   }
