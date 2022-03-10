@@ -13,14 +13,19 @@ export class ChatView extends LitElement {
 
   @query("#message")
   message!: TextField;
+  chatConnection: any;
 
   async connectedCallback() {
     super.connectedCallback();
     this.style.height = "calc(100% - 32px)";
     this.classList.add('flex', 'flex-col', 'p-m', 'gap-m');
-    ChatEndpoint.join().onData(msg => {
+    this.chatConnection = ChatEndpoint.join().onData(msg => {
       this.messages = [...this.messages, msg];
     });
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.chatConnection.close();
   }
 
   render() {
