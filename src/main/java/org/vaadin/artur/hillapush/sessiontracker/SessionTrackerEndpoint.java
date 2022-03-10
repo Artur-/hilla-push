@@ -22,10 +22,8 @@ public class SessionTrackerEndpoint {
     @Autowired
     private HttpSession session;
 
-    public String registerName(String name, String navigator) {
-        DebugLogger.info("registerName " + name + " for " + session.getId());
+    public void registerName(String name, String navigator) {
         activeUserTracker.setInfo(session, name, navigator);
-        return "";
     }
 
     public Flux<Collection<SessionInfo>> getActiveSessions() {
@@ -33,6 +31,7 @@ public class SessionTrackerEndpoint {
                 .map(event -> event.getUsers().values());
         return endpointReturn;
     }
+
     public void endSession(String sessionId) {
         activeUserTracker.getSession(sessionId).invalidate();
     }
