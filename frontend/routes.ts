@@ -29,6 +29,16 @@ export const views: ViewRoute[] = [
         },
     },
     {
+        path: 'chat',
+        component: 'chat-view',
+        icon: 'la la-comments',
+        title: 'Chat',
+        action: async (_context, _command) => {
+            await import('./views/chat-view');
+            return;
+        },
+    },
+    {
         path: 'test',
         component: 'test-view',
         icon: 'la la-flask',
