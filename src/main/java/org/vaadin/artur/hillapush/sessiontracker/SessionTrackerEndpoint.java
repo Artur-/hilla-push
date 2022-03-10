@@ -1,7 +1,6 @@
 package org.vaadin.artur.hillapush.sessiontracker;
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.artur.hillapush.sessiontracker.ActiveUserTracker.SessionInfo;
 
 import dev.hilla.Endpoint;
-import dev.hilla.Nonnull;
 import reactor.core.publisher.Flux;
 
 @Endpoint
@@ -25,14 +23,17 @@ public class SessionTrackerEndpoint {
     private HttpSession session;
 
     public String registerName(String name, String navigator) {
-        activeUserTracker.setInfo(session.getId(), name, navigator);
+        DebugLogger.info("registerName " + name + " for " + session.getId());
+        activeUserTracker.setInfo(session, name, navigator);
         return "";
     }
 
-    @Nonnull
     public Flux<Collection<SessionInfo>> getActiveSessions() {
         Flux<Collection<SessionInfo>> endpointReturn = activeUserTracker.getActiveUsers()
                 .map(event -> event.getUsers().values());
         return endpointReturn;
+    }
+    public void endSession(String sessionId) {
+        activeUserTracker.getSession(sessionId).invalidate();
     }
 }

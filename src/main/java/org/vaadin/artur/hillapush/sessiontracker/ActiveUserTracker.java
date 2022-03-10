@@ -4,11 +4,15 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpSession;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import dev.hilla.Nonnull;
 import reactor.core.publisher.ConnectableFlux;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
@@ -20,11 +24,15 @@ public class ActiveUserTracker {
     // }
 
     public static class SessionInfo {
-        private String id, owner, navigator;
+        @Nonnull
+        private String id, user, navigator;
 
-        public SessionInfo(String id, String owner) {
-            this.id = id;
-            this.owner = owner;
+        private HttpSession session;
+
+        public SessionInfo(HttpSession session) {
+            this.session = session;
+            this.id = session.getId();
+            this.user = "Anonymous";
         }
 
         public String getId() {
@@ -35,12 +43,12 @@ public class ActiveUserTracker {
             this.id = id;
         }
 
-        public String getOwner() {
-            return owner;
+        public String getUser() {
+            return user;
         }
 
-        public void setOwner(String owner) {
-            this.owner = owner;
+        public void setUser(String user) {
+            this.user = user;
         }
 
         public String getNavigator() {
@@ -49,6 +57,11 @@ public class ActiveUserTracker {
 
         public void setNavigator(String navigator) {
             this.navigator = navigator;
+        }
+
+        @JsonIgnore
+        public HttpSession getSession() {
+            return session;
         }
     }
 
@@ -89,9 +102,10 @@ public class ActiveUserTracker {
         });
     }
 
-    public void register(String sessionId) {
+    public void register(HttpSession session) {
+        String sessionId = session.getId();
         getLogger().info("New session: " + sessionId);
-        activeUsers.put(sessionId, new SessionInfo(sessionId, "Anonymous"));
+        activeUsers.put(sessionId, new SessionInfo(session));
         fireEvent();
     }
 
@@ -99,15 +113,17 @@ public class ActiveUserTracker {
         return LoggerFactory.getLogger(getClass());
     }
 
-    public void setInfo(String sessionId, String name, String navigator) {
-        getLogger().info("Session: " + sessionId + " is used by " + name);
-        activeUsers.get(sessionId).setOwner(name);
-        activeUsers.get(sessionId).setNavigator(navigator);
+    public void setInfo(HttpSession session, String name, String navigator) {
+        getLogger().info("Session: " + session.getId() + " is used by " + name);
+        SessionInfo sessionInfo = activeUsers.computeIfAbsent(session.getId(), sid -> new SessionInfo(session));
+        sessionInfo.setUser(name);
+        sessionInfo.setNavigator(navigator);
         fireEvent();
     }
 
     public void unregister(String sessionId) {
         activeUsers.remove(sessionId);
+        fireEvent();
     }
 
     public Collection<SessionInfo> getAll() {
@@ -116,6 +132,10 @@ public class ActiveUserTracker {
 
     public Flux<ActiveUserEvent> getActiveUsers() {
         return activeUsersFlux;
+    }
+
+    public HttpSession getSession(String sessionId) {
+        return activeUsers.get(sessionId).getSession();
     }
 
 }

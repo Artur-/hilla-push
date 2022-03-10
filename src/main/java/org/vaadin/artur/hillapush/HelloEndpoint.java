@@ -1,7 +1,6 @@
 package org.vaadin.artur.hillapush;
 
 import java.time.Duration;
-import java.util.Collection;
 import java.util.Random;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
