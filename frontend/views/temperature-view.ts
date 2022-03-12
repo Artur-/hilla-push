@@ -1,27 +1,46 @@
 import '@vaadin/charts';
-import { HelloEndpoint } from 'Frontend/generated/endpoints';
+import '@vaadin/charts/src/vaadin-chart-series';
+import { TemperatureEndpoint } from 'Frontend/generated/endpoints';
+import { Options } from 'highcharts';
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 @customElement('temperature-view')
 export class TemperatureView extends LitElement {
   @state()
-  series1: number[] = [];
+  temperatures: Record<string, number[][]> = {};
+
 
   async connectedCallback() {
     super.connectedCallback();
     this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
-    HelloEndpoint.random(10, 15).onData(value => {
-      this.series1 = [...this.series1, value];
+
+    const sensors = await TemperatureEndpoint.getSensorIds();
+
+    sensors.forEach(sensorId => {
+      TemperatureEndpoint.getHistory(sensorId).then(values => {
+        this.temperatures[sensorId] = values.map(value => {
+          return [value.timestamp, value.value]
+        })
+        const lastTimestamp = this.temperatures[sensorId][this.temperatures[sensorId].length - 1][0];
+        TemperatureEndpoint.subscribeToUpdates(sensorId, lastTimestamp).onData(value => {
+          this.temperatures[sensorId] = [...this.temperatures[sensorId], [value.timestamp, value.value]];
+          this.temperatures = { ...this.temperatures };
+        })
+        this.temperatures = { ...this.temperatures };
+      });
     });
   }
 
   render() {
+    const opt: Options = { xAxis: { type: "datetime" } };
     return html`
-    <vaadin-chart type="spline" title="Numbers from the server" tooltip>
-      <vaadin-chart-series name="Random numbers between 0 and 15" .values=${this.series1}></vaadin-chart-series>
+    <vaadin-chart  title="Temperatures" tooltip .additionalOptions=${opt}>
+      <vaadin-chart-series title="Kitchen" .values=${this.temperatures["Kitchen"]}></vaadin-chart-series>
+      <vaadin-chart-series title="Living room" .values=${this.temperatures["Living Room"]}></vaadin-chart-series>
+      <vaadin-chart-series title="Basement" .values=${this.temperatures["Basement"]}></vaadin-chart-series>
     </vaadin-chart>
-    `;
+        `;
   }
 
 }

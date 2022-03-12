@@ -2,6 +2,7 @@ package org.vaadin.artur.hillapush.sessiontracker;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpSession;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -26,6 +27,7 @@ public class SessionTrackerEndpoint {
         activeUserTracker.setInfo(session, name, navigator);
     }
 
+    @Nonnull
     public Flux<Collection<SessionInfo>> getActiveSessions() {
         Flux<Collection<SessionInfo>> endpointReturn = activeUserTracker.getActiveUsers()
                 .map(event -> event.getUsers().values());
