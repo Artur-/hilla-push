@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dev.hilla.Nonnull;
 
 @Entity
@@ -14,6 +16,7 @@ public class ValueWithTimestamp {
     private int id;
 
     @Nonnull
+    @JsonIgnore
     private String sensorId;
     private long timestamp;
     private double value;

@@ -19,7 +19,7 @@ export class ChatView extends LitElement {
     super.connectedCallback();
     this.style.height = "calc(100% - 32px)";
     this.classList.add('flex', 'flex-col', 'p-m', 'gap-m');
-    this.chatConnection = ChatEndpoint.join().onData(msg => {
+    this.chatConnection = ChatEndpoint.join().onNext(msg => {
       this.messages = [...this.messages, msg];
     });
   }

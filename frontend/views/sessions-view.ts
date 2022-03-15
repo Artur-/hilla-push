@@ -21,7 +21,7 @@ export class SessionsView extends LitElement {
   async connectedCallback() {
     super.connectedCallback();
     this.classList.add('flex', 'flex-col', 'p-m', 'gap-m');
-    SessionTrackerEndpoint.getActiveSessions().onData(value => {
+    SessionTrackerEndpoint.getActiveSessions().onNext(value => {
       this.sessions = value as any as SessionInfo[];
     });
   }

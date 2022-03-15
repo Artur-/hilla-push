@@ -20,6 +20,16 @@ public class HelloEndpoint {
     }
 
     @Nonnull
+    public Flux<@Nonnull Integer> countToAndFail(int number, int delay) {
+        return Flux.range(1, number).delayElements(Duration.ofMillis(delay)).map(nr -> {
+            if (nr > 5) {
+                throw new RuntimeException("Counting failed");
+            }
+            return nr;
+        });
+    }
+
+    @Nonnull
     public Flux<@Nonnull Integer> random(int number, int maxValue) {
         return Flux.range(1, number).delayElements(Duration.ofMillis(500)).map(nr -> r.nextInt(maxValue));
     }

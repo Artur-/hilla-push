@@ -16,14 +16,14 @@ export class TemperatureView extends LitElement {
     this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
 
     const sensors = await TemperatureEndpoint.getSensorIds();
-
     sensors.forEach(sensorId => {
       TemperatureEndpoint.getHistory(sensorId).then(values => {
         this.temperatures[sensorId] = values.map(value => {
           return [value.timestamp, value.value]
         })
         const lastTimestamp = this.temperatures[sensorId][this.temperatures[sensorId].length - 1][0];
-        TemperatureEndpoint.subscribeToUpdates(sensorId, lastTimestamp).onData(value => {
+        const subscriber = TemperatureEndpoint.subscribeToUpdates(sensorId, lastTimestamp);
+        subscriber.onNext(value => {
           this.temperatures[sensorId] = [...this.temperatures[sensorId], [value.timestamp, value.value]];
           this.temperatures = { ...this.temperatures };
         })
