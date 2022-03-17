@@ -5,6 +5,7 @@ import { ChatEndpoint } from 'Frontend/generated/endpoints';
 import { html, LitElement } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
 import { TextField } from "@vaadin/text-field";
+import { Subscription } from "Frontend/generated/connect-client.default";
 
 @customElement('chat-view')
 export class ChatView extends LitElement {
@@ -13,7 +14,7 @@ export class ChatView extends LitElement {
 
   @query("#message")
   message!: TextField;
-  chatConnection: any;
+  chatConnection: Subscription<string> | undefined;
 
   async connectedCallback() {
     super.connectedCallback();
@@ -25,7 +26,10 @@ export class ChatView extends LitElement {
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.chatConnection.close();
+    if (this.chatConnection) {
+      this.chatConnection.cancel();
+      this.chatConnection = undefined;
+    }
   }
 
   render() {
