@@ -45,6 +45,15 @@ export const views: ViewRoute[] = [
         title: 'Online indicator',
         action: async (_context, _command) => {
             await import('./views/online-indicator-view');
+        }
+    },
+    {
+        path: 'crud',
+        component: 'crud-view',
+        icon: 'la la-comments',
+        title: 'Data table',
+        action: async (_context, _command) => {
+            await import('./views/crud-view');
             return;
         },
     },
