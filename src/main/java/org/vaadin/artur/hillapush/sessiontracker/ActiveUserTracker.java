@@ -28,6 +28,7 @@ public class ActiveUserTracker {
         private String id, user, navigator;
 
         private HttpSession session;
+        private boolean tabActive = true;
 
         public SessionInfo(HttpSession session) {
             this.session = session;
@@ -59,10 +60,19 @@ public class ActiveUserTracker {
             this.navigator = navigator;
         }
 
+        public boolean isTabActive() {
+            return tabActive;
+        }
+
+        public void setTabActive(boolean tabActive) {
+            this.tabActive = tabActive;
+        }
+
         @JsonIgnore
         public HttpSession getSession() {
             return session;
         }
+
     }
 
     private ConcurrentHashMap<String, SessionInfo> activeUsers = new ConcurrentHashMap<>();
@@ -136,6 +146,14 @@ public class ActiveUserTracker {
 
     public HttpSession getSession(String sessionId) {
         return activeUsers.get(sessionId).getSession();
+    }
+
+    public void setTabActive(HttpSession session, boolean tabActive) {
+        getLogger().info("Session: " + session.getId() + " active: " + tabActive);
+        SessionInfo sessionInfo = activeUsers.computeIfAbsent(session.getId(), sid -> new SessionInfo(session));
+        sessionInfo.setTabActive(tabActive);
+        fireEvent();
+
     }
 
 }

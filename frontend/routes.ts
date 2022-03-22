@@ -39,6 +39,16 @@ export const views: ViewRoute[] = [
         },
     },
     {
+        path: 'online-indicator',
+        component: 'online-indicator-view',
+        icon: 'la la-user-circle',
+        title: 'Online indicator',
+        action: async (_context, _command) => {
+            await import('./views/online-indicator-view');
+            return;
+        },
+    },
+    {
         path: 'test',
         component: 'test-view',
         icon: 'la la-flask',

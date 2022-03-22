@@ -2,7 +2,6 @@ package org.vaadin.artur.hillapush.sessiontracker;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
 import javax.servlet.http.HttpSession;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.artur.hillapush.sessiontracker.ActiveUserTracker.SessionInfo;
 
 import dev.hilla.Endpoint;
+import dev.hilla.Nonnull;
 import reactor.core.publisher.Flux;
 
 @Endpoint
@@ -27,8 +27,12 @@ public class SessionTrackerEndpoint {
         activeUserTracker.setInfo(session, name, navigator);
     }
 
+    public void setTabActive(boolean tabActive) {
+        activeUserTracker.setTabActive(session, tabActive);
+    }
+
     @Nonnull
-    public Flux<Collection<SessionInfo>> getActiveSessions() {
+    public Flux<@Nonnull Collection<@Nonnull SessionInfo>> getActiveSessions() {
         Flux<Collection<SessionInfo>> endpointReturn = activeUserTracker.getActiveUsers()
                 .map(event -> event.getUsers().values());
         return endpointReturn;
