@@ -11,7 +11,7 @@
     <properties>
         <java.version>17</java.version>
         <hilla.version>1.0.1</hilla.version>
-        <flow.version>23.1.hillapush-SNAPSHOT</flow.version>
+        <flow.version>23.1.hillapushio-SNAPSHOT</flow.version>
     </properties>
 
     <parent>
