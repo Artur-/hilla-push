@@ -7,14 +7,9 @@ import java.util.Random;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
-import reactor.core.publisher.ConnectableFlux;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Sinks;
-import reactor.core.publisher.Sinks.Many;
 
 @Endpoint
 @AnonymousAllowed
