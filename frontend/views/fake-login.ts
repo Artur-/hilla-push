@@ -20,7 +20,7 @@ export class FakeLogin extends LitElement {
     enterName(e: KeyboardEvent) {
         if (e.key == 'Enter') {
             const name = this.nameField.value;
-            SessionTrackerEndpoint.registerName(name, window.navigator.userAgent);
+            SessionTrackerEndpoint.setName(name);
         }
     }
 

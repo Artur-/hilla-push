@@ -23,8 +23,12 @@ public class SessionTrackerEndpoint {
     @Autowired
     private HttpSession session;
 
-    public void registerName(String name, String navigator) {
-        activeUserTracker.setInfo(session, name, navigator);
+    public void setBrowser(String navigator) {
+        activeUserTracker.setBrowser(session, navigator);
+    }
+
+    public void setName(String name) {
+        activeUserTracker.setName(session, name);
     }
 
     public void setTabActive(boolean tabActive) {

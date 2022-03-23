@@ -16,12 +16,11 @@ import dev.hilla.Nonnull;
 import reactor.core.publisher.ConnectableFlux;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
+import reactor.core.publisher.Sinks.EmitResult;
 import reactor.core.publisher.Sinks.Many;
 
 @Service
 public class ActiveUserTracker {
-    // public record SessionInfo(String id, String owner) {
-    // }
 
     public static class SessionInfo {
         @Nonnull
@@ -107,6 +106,9 @@ public class ActiveUserTracker {
 
     void fireEvent() {
         source.emitNext(new ActiveUserEvent(activeUsers), (signalType, emitResult) -> {
+            if (emitResult == EmitResult.FAIL_NON_SERIALIZED) {
+                return true;
+            }
             getLogger().error("Emit failure: " + emitResult);
             return false;
         });
@@ -121,14 +123,6 @@ public class ActiveUserTracker {
 
     private Logger getLogger() {
         return LoggerFactory.getLogger(getClass());
-    }
-
-    public void setInfo(HttpSession session, String name, String navigator) {
-        getLogger().info("Session: " + session.getId() + " is used by " + name);
-        SessionInfo sessionInfo = activeUsers.computeIfAbsent(session.getId(), sid -> new SessionInfo(session));
-        sessionInfo.setUser(name);
-        sessionInfo.setNavigator(navigator);
-        fireEvent();
     }
 
     public void unregister(String sessionId) {
@@ -153,7 +147,19 @@ public class ActiveUserTracker {
         SessionInfo sessionInfo = activeUsers.computeIfAbsent(session.getId(), sid -> new SessionInfo(session));
         sessionInfo.setTabActive(tabActive);
         fireEvent();
+    }
 
+    public void setName(HttpSession session, String name) {
+        getLogger().info("Session: " + session.getId() + " is used by " + name);
+        SessionInfo sessionInfo = activeUsers.computeIfAbsent(session.getId(), sid -> new SessionInfo(session));
+        sessionInfo.setUser(name);
+        fireEvent();
+    }
+
+    public void setBrowser(HttpSession session, String browser) {
+        SessionInfo sessionInfo = activeUsers.computeIfAbsent(session.getId(), sid -> new SessionInfo(session));
+        sessionInfo.setNavigator(browser);
+        fireEvent();
     }
 
 }
