@@ -60,7 +60,7 @@ export const views: ViewRoute[] = [
   {
     path: 'puzzle',
     component: 'puzzle-view',
-    icon: 'la la-puzzle',
+    icon: 'la la-puzzle-piece',
     title: 'Puzzle',
     action: async (_context, _command) => {
       await import('./views/puzzle-view');
