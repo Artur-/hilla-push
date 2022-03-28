@@ -7,7 +7,7 @@ export class SessionsStore {
 
   constructor() {
     makeAutoObservable(this);
-    SessionTrackerEndpoint.getActiveSessions().onNext(sessions => {
+    SessionTrackerEndpoint.getActiveSessions().onNext((sessions) => {
       this.sessions = sessions;
     });
   }
