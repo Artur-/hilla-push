@@ -125,7 +125,8 @@
     "lit": "2.1.4",
     "lit-vaadin-helpers": "^0.3.0",
     "mobx": "^6.3.5",
-    "seedrandom": "^3.0.5"
+    "seedrandom": "^3.0.5",
+    "socket.io-client": "4.4.1"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "3.1.0",
@@ -267,7 +268,8 @@
     "@vaadin/bundles": "$@vaadin/bundles",
     "lit-vaadin-helpers": "$lit-vaadin-helpers",
     "a-avataaar": "$a-avataaar",
-    "seedrandom": "$seedrandom"
+    "seedrandom": "$seedrandom",
+    "socket.io-client": "$socket.io-client"
   },
   "vaadin": {
     "dependencies": {
@@ -386,7 +388,8 @@
       "@vaadin/virtual-list": "23.0.1",
       "@webcomponents/shadycss": "1.9.6",
       "construct-style-sheets-polyfill": "3.0.4",
-      "lit": "2.1.4"
+      "lit": "2.1.4",
+      "socket.io-client": "4.4.1"
     },
     "devDependencies": {
       "@rollup/plugin-replace": "3.1.0",
@@ -400,6 +403,6 @@
       "workbox-core": "6.5.0",
       "workbox-precaching": "6.5.0"
     },
-    "hash": "639e171435253372bff1e49348d153b755e4e7cd1124211303d57d6a6fbc93c3"
+    "hash": "8715fda5034f132f9fa7dc4d9bdcade020ef8037ff4998ab6e077f57238600aa"
   }
 }
