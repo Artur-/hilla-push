@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
+import java.util.concurrent.ConcurrentHashMap.KeySetView;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.artur.hillapush.sessiontracker.ActiveUserTracker;
+import org.vaadin.artur.hillapush.sessiontracker.ActiveUserTracker.SessionInfo;
 
 import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
@@ -42,6 +43,11 @@ public class CursorTracker {
 
         sink = Sinks.many().multicast().directBestEffort();
         flux = sink.asFlux();
+
+        activeUserTracker.getActiveUsers().subscribe(event -> {
+            KeySetView<String, SessionInfo> activeSessionIds = event.getUsers().keySet();
+            cursors.keySet().removeIf(sessionId -> !activeSessionIds.contains(sessionId));
+        });
     }
 
     @Nonnull
