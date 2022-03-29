@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpSession;
 
@@ -45,13 +46,17 @@ public class CursorTracker {
 
     @Nonnull
     public Flux<@Nonnull List<@Nonnull Cursor>> subscribe() {
-        return flux;
+        // String sessionId = httpSession.getId();
+        String sessionId="123";
+        return flux
+                .map(cursors -> cursors.stream().filter(cursor -> !cursor.getSessionId().equals(sessionId)).toList());
     }
 
     public void trackCursor(int x, int y) {
         String sessionId = httpSession.getId();
         Cursor cursor = cursors.computeIfAbsent(sessionId, sid -> {
             Cursor c = new Cursor();
+            c.setSessionId(sessionId);
             c.setColor(colors[sessionId.charAt(0) % colors.length]);
             return c;
         });
