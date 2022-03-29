@@ -1,6 +1,5 @@
 import { PuzzleEndpoint } from 'Frontend/generated/endpoints';
 import DropInfo from 'Frontend/generated/org/vaadin/artur/hillapush/puzzle/DropInfo';
-import Edge from 'Frontend/generated/org/vaadin/artur/hillapush/puzzle/Edge';
 import Piece from 'Frontend/generated/org/vaadin/artur/hillapush/puzzle/Piece';
 import { css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
@@ -174,11 +173,4 @@ export class PuzzleArea extends Layout {
     this.dragOffsetY = e.offsetY;
   }
 
-  protected swap(e: Event) {
-    const button = e.target as any;
-    const left = button.previousElementSibling;
-    const right = button.nextElementSibling;
-    left.right = left.right === Edge.EDGE1 ? Edge.EDGE2 : Edge.EDGE1;
-    right.left = left.right;
-  }
 }
