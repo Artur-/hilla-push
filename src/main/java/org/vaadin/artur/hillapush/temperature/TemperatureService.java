@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
+import reactor.core.publisher.Sinks.EmitResult;
 import reactor.core.publisher.Sinks.Many;
 
 @Service
@@ -35,8 +36,12 @@ public class TemperatureService {
         temperatureRepository.findAllByTimestampGreaterThan(lastHandledTimestamp)
                 .forEach(value -> {
                     lastHandledTimestamp = Math.max(lastHandledTimestamp, value.getTimestamp());
-                    sink.emitNext(value, (a, b) -> {
-                        getLogger().warn("Failed: " + b);
+                    sink.emitNext(value, (a, emitResult) -> {
+                        if (emitResult == EmitResult.FAIL_ZERO_SUBSCRIBER) {
+                            return false;
+                        }
+
+                        getLogger().warn("Failed: " + emitResult);
                         return false;
                     });
                 });
