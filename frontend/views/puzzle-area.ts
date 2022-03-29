@@ -137,7 +137,6 @@ export class PuzzleArea extends Layout {
     const gridX = Math.round((x + this.piecePadding) / this.pieceInnerSize);
     const gridY = Math.round((y + this.piecePadding) / this.pieceInnerSize);
 
-    // const dropX =
     x = x > -this.piecePadding ? x : -this.piecePadding;
     y = y > -this.piecePadding ? y : -this.piecePadding;
     return { x, y, gridX, gridY };
@@ -147,7 +146,6 @@ export class PuzzleArea extends Layout {
 
     this.dragPiece!.left = dropInfo.x;
     this.dragPiece!.top = dropInfo.y;
-    console.log(dropInfo);
     PuzzleEndpoint.dropPieceAt(this.dragPiece!.id, dropInfo);
     this.requestUpdate('pieces');
   }

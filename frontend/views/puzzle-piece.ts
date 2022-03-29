@@ -1,6 +1,6 @@
 import Edge from 'Frontend/generated/org/vaadin/artur/hillapush/puzzle/Edge';
 import { reverseX, reverseY, rotate } from 'Frontend/svg';
-import { css, LitElement, svg } from 'lit';
+import { css, LitElement, PropertyValueMap, svg } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 const edge1 =
@@ -44,7 +44,7 @@ export class PuzzlePiece extends LitElement {
     `;
   }
   render() {
-    return svg`<svg style="fill:none;stroke:#000000;stroke-width:0.5px;" viewbox="-15 -15 80 80">
+    return svg`<svg style="width: 100%;fill:none;stroke:#000000;stroke-width:0.5px;" viewbox="-15 -15 80 80">
         <defs>
           <path id="path${this.pieceId}" d="M 0 0 ${horizontalPaths[this.top]} ${rotate(horizontalPaths[this.right])} 
           ${reverseX(horizontalPaths[this.bottom])} ${reverseY(rotate(horizontalPaths[this.left]))}
@@ -60,4 +60,17 @@ export class PuzzlePiece extends LitElement {
     </svg>
         `;
   }
+  protected updated(_changedProperties: Map<PropertyKey, unknown>): void {
+    if (
+      isSafari() &&
+      _changedProperties.has('correctlyPlaced') &&
+      _changedProperties.get('correctlyPlaced') === false
+    ) {
+      this.style.display = 'none';
+      requestAnimationFrame(() => (this.style.display = ''));
+    }
+  }
+}
+function isSafari() {
+  return navigator.userAgent.includes(" Safari/");
 }
