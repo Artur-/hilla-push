@@ -156,10 +156,20 @@ public class ActiveUserTracker {
         fireEvent();
     }
 
+    public String getName(String sessionId) {
+        SessionInfo info =  activeUsers.get(sessionId);
+        if (info != null) {
+            return info.getUser();
+        }
+        return "???";
+    }
+
+
     public void setBrowser(HttpSession session, String browser) {
         SessionInfo sessionInfo = activeUsers.computeIfAbsent(session.getId(), sid -> new SessionInfo(session));
         sessionInfo.setNavigator(browser);
         fireEvent();
     }
+
 
 }
