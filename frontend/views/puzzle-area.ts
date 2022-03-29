@@ -8,6 +8,14 @@ import './puzzle-piece';
 import { PuzzlePiece } from './puzzle-piece';
 import { Layout } from './view';
 
+const images: string[] = [
+  'https://images.unsplash.com/photo-1605851868183-7a4de52117fa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
+  'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1160&q=80',
+  'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
+  'https://images.unsplash.com/photo-1585238342024-78d387f4a707?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
+  'https://images.unsplash.com/photo-1516714435131-44d6b64dc6a2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
+];
+
 @customElement('puzzle-area')
 export class PuzzleArea extends Layout {
   @state()
@@ -18,8 +26,7 @@ export class PuzzleArea extends Layout {
   private piecePadding!: number;
   private pieceInnerSize!: number;
   private pieceOuterSize!: number;
-  private image: string =
-    'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1160&q=80';
+  private image!: string;
   dragPuzzlePiece?: PuzzlePiece;
   dragPiece?: Piece;
   dragImage?: Element;
@@ -57,12 +64,16 @@ export class PuzzleArea extends Layout {
     this.piecePadding = (this.pieceOuterSize - this.pieceInnerSize) / 2;
 
     PuzzleEndpoint.join().onNext((pieces) => {
+      if (this.pieces.length === 0 || pieces[0].id !== this.pieces[0].id) {
+        this.image = images[Math.floor(Math.random() * images.length)];
+      }
       this.pieces = pieces;
     });
   }
 
   render() {
-    const success = this.pieces.length != 0 && this.pieces.map((piece) => piece.correctlyPlaced).reduce((prev, curr) => prev && curr);
+    const success =
+      this.pieces.length != 0 && this.pieces.map((piece) => piece.correctlyPlaced).reduce((prev, curr) => prev && curr);
 
     return html`
       <div style="width:100%; height: 100%;" @dragover=${this.dragOver} @drop=${this.drop}>
