@@ -1,60 +1,23 @@
+import { PuzzleEndpoint } from 'Frontend/generated/endpoints';
+import DropInfo from 'Frontend/generated/org/vaadin/artur/hillapush/puzzle/DropInfo';
+import Edge from 'Frontend/generated/org/vaadin/artur/hillapush/puzzle/Edge';
+import Piece from 'Frontend/generated/org/vaadin/artur/hillapush/puzzle/Piece';
 import { css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import seedrandom from 'seedrandom';
+import { customElement, state } from 'lit/decorators.js';
 import './puzzle-piece';
-import { Edge, PuzzlePiece } from './puzzle-piece';
+import { PuzzlePiece } from './puzzle-piece';
 import { Layout } from './view';
 
-interface Piece {
-  id: number;
-  top: number;
-  left: number;
-  x: number;
-  y: number;
-  leftEdge: Edge;
-  rightEdge: Edge;
-  topEdge: Edge;
-  bottomEdge: Edge;
-  imageX: number;
-  imageY: number;
-  locked: boolean;
-  zIndex: number;
-}
-
-const randomBoolean1 = (i: number): boolean => {
-  return seedrandom('boolean1-' + i)() > 0.5;
-};
-const randomBoolean2 = (i: number): boolean => {
-  return seedrandom('boolean2-' + i)() > 0.5;
-};
-const leftEdge = (x: number, y: number, N: number): Edge => {
-  if (x === 0 || x === N) {
-    return Edge.STRAIGHT;
-  }
-
-  return randomBoolean1(y * N + x) ? Edge.EDGE1 : Edge.EDGE2;
-};
-
-const topEdge = (x: number, y: number, N: number): Edge => {
-  if (y === 0 || y === N) {
-    return Edge.STRAIGHT;
-  }
-  return randomBoolean2(y * N + x) ? Edge.EDGE1 : Edge.EDGE2;
-};
-
-const random = (min: number, range: number): number => {
-  return min + Math.random() * range;
-};
 @customElement('puzzle-area')
 export class PuzzleArea extends Layout {
+  @state()
   private pieces: Piece[] = [];
-  private N = 4;
-  private size = 500;
-  private imageWidth = 1000;
-  private pieceImageSize = this.N * 50;
-  private piecePadding: number;
-  private pieceInnerSize: number;
-  private pieceOuterSize: number;
+  private size!: number;
+  private N!: number;
+  private pieceImageSize!: number;
+  private piecePadding!: number;
+  private pieceInnerSize!: number;
+  private pieceOuterSize!: number;
   private image: string =
     'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1160&q=80';
   dragPuzzlePiece?: PuzzlePiece;
@@ -62,7 +25,6 @@ export class PuzzleArea extends Layout {
   dragImage?: Element;
   dragOffsetX?: number;
   dragOffsetY?: number;
-  private success = false;
 
   static get styles() {
     return css`
@@ -83,48 +45,25 @@ export class PuzzleArea extends Layout {
     }
     ]`;
   }
-  constructor() {
-    super();
-    let id = 0;
-    const img = '';
 
+  async connectedCallback() {
+    super.connectedCallback();
+    const info = await PuzzleEndpoint.getInfo();
+    this.N = info.N;
+    this.size = info.size;
+    this.pieceImageSize = this.N * 50;
     this.pieceInnerSize = this.size / this.N;
     this.pieceOuterSize = (this.pieceInnerSize * 18.75) / 11.72;
     this.piecePadding = (this.pieceOuterSize - this.pieceInnerSize) / 2;
 
-    for (let x = 0; x < this.N; x++) {
-      for (let y = 0; y < this.N; y++) {
-        let top, left;
-        if (Math.random() > 0.5) {
-          // Below
-          top = random(this.size, this.pieceInnerSize * 2);
-          left = random(0, this.size);
-        } else {
-          // Right
-          top = random(0, this.size);
-          left = random(this.size, this.pieceInnerSize * 2);
-        }
-
-        this.pieces.push({
-          id: id++,
-          top,
-          left,
-          x: x,
-          y: y,
-          imageX: x,
-          imageY: y,
-          leftEdge: leftEdge(x, y, this.N),
-          rightEdge: leftEdge(x + 1, y, this.N),
-          topEdge: topEdge(x, y, this.N),
-          bottomEdge: topEdge(x, y + 1, this.N),
-          locked: false, //randomBoolean1(x),
-          zIndex: 1,
-        });
-      }
-    }
+    PuzzleEndpoint.join().onNext((pieces) => {
+      this.pieces = pieces;
+    });
   }
 
   render() {
+    const success = this.pieces.length != 0 && this.pieces.map((piece) => piece.correctlyPlaced).reduce((prev, curr) => prev && curr);
+
     return html`
       <div style="width:100%; height: 100%;" @dragover=${this.dragOver} @drop=${this.drop}>
         <div
@@ -135,12 +74,13 @@ export class PuzzleArea extends Layout {
         --piece-neg-padding: calc(0px - var(--piece-padding))
         "
         >
-          <div style=${this.success ? '' : 'display:none'} class="success">👍</div>
+          <div style=${success ? '' : 'display:none'} class="success">👍</div>
           ${this.pieces.map((piece) => {
-            const zIndex = piece.locked ? 0 : piece.zIndex;
+            const zIndex = piece.correctlyPlaced ? 0 : piece.zIndex;
             return html` <puzzle-piece
-              style="position: absolute;top: ${piece.top}px; left: ${piece.left}px; width: var(--piece-size);height:var(--piece-size); z-index: ${zIndex}"
-              draggable="${!piece.locked}"
+              style="position: absolute;top: ${piece.top - this.piecePadding}px; left: ${piece.left -
+              this.piecePadding}px; width: var(--piece-size);height:var(--piece-size); z-index: ${zIndex}"
+              draggable="${!piece.correctlyPlaced}"
               @dragstart=${(e: DragEvent) => this.dragStart(e, piece)}
               @dragend=${this.dragEnd}
               .pieceId=${piece.id}
@@ -150,9 +90,8 @@ export class PuzzleArea extends Layout {
               .bottom="${piece.bottomEdge}"
               .x="${piece.imageX}"
               .y="${piece.imageY}"
-              .locked=${piece.locked}
+              .correctlyPlaced=${piece.correctlyPlaced}
               .image=${this.image}
-              .imageSize=${this.imageWidth}
               .pieceImageSize=${this.pieceImageSize}
             ></puzzle-piece>`;
           })}
@@ -173,7 +112,7 @@ export class PuzzleArea extends Layout {
   private dragOver(e: DragEvent) {
     e.preventDefault();
   }
-  private drop(e: DragEvent) {
+  private getDropInfo(e: DragEvent): DropInfo {
     const dropElement = e.target as HTMLElement;
     let x = e.offsetX - this.dragOffsetX!;
     let y = e.offsetY - this.dragOffsetY!;
@@ -181,34 +120,25 @@ export class PuzzleArea extends Layout {
       x += dropElement.offsetLeft;
       y += dropElement.offsetTop;
     }
-    this.dragPiece!.left = x > -this.piecePadding ? x : -this.piecePadding;
-    this.dragPiece!.top = y > -this.piecePadding ? y : -this.piecePadding;
+    x += this.piecePadding;
+    y += this.piecePadding;
 
-    this.lockIfInPlace(this.dragPiece!);
-    this.dragPiece!.zIndex =
-      1 +
-      this.pieces
-        .filter((piece) => piece !== this.dragPiece)
-        .map((piece) => piece.zIndex)
-        .reduce((prev, current) => Math.max(prev, current));
+    const gridX = Math.round((x + this.piecePadding) / this.pieceInnerSize);
+    const gridY = Math.round((y + this.piecePadding) / this.pieceInnerSize);
 
-    if (this.pieces.map((piece) => piece.locked).reduce((prev, curr) => prev && curr)) {
-      // All done
-      this.success = true;
-    }
-    this.requestUpdate('pieces');
+    // const dropX =
+    x = x > -this.piecePadding ? x : -this.piecePadding;
+    y = y > -this.piecePadding ? y : -this.piecePadding;
+    return { x, y, gridX, gridY };
   }
+  private drop(e: DragEvent) {
+    const dropInfo = this.getDropInfo(e);
 
-  private lockIfInPlace(piece: Piece) {
-    const correctX = -this.piecePadding + this.pieceInnerSize * piece.x;
-    const correctY = -this.piecePadding + this.pieceInnerSize * piece.y;
-
-    if (Math.abs(piece.left - correctX) < 10 && Math.abs(piece.top - correctY) < 10) {
-      piece.locked = true;
-      piece.left = correctX;
-      piece.top = correctY;
-      piece.zIndex = 0;
-    }
+    this.dragPiece!.left = dropInfo.x;
+    this.dragPiece!.top = dropInfo.y;
+    console.log(dropInfo);
+    PuzzleEndpoint.dropPieceAt(this.dragPiece!.id, dropInfo);
+    this.requestUpdate('pieces');
   }
 
   private dragStart(e: DragEvent, piece: Piece) {

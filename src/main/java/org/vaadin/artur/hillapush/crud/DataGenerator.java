@@ -2,8 +2,6 @@ package org.vaadin.artur.hillapush.crud;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 import com.vaadin.exampledata.DataType;
 import com.vaadin.exampledata.ExampleDataGenerator;

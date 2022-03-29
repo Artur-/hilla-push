@@ -3,8 +3,6 @@ package org.vaadin.artur.hillapush.temperature;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
