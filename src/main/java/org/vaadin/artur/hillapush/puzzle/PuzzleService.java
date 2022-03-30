@@ -26,7 +26,7 @@ public class PuzzleService {
     private Random random = new Random();
     private int nextId = 1;
     private List<Piece> activePuzzle;
-    private int N = 4;
+    private int N = 5;
     private int size = 500;
 
     public PuzzleService() {
