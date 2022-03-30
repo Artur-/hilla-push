@@ -151,26 +151,45 @@ export class PuzzleArea extends Layout {
 
   private dragStart(e: DragEvent, piece: Piece) {
     const puzzlePieze: PuzzlePiece = e.target! as any;
-    let dragImage: Element = puzzlePieze.renderRoot!.querySelector('svg')!;
+    if (!this.dragImage) {
+      let dragImage: SVGSVGElement = puzzlePieze.renderRoot!.querySelector('svg')!;
+      this.dragImage = dragImage.cloneNode(true) as SVGSVGElement;
+      const dragStyles = (this.dragImage as any).style;
+      dragStyles.width = this.pieceOuterSize + 'px';
+      dragStyles.position = 'absolute';
+      dragStyles.top = '-1000px';
+      dragStyles.left = '-1000px';
+      document.body.append(this.dragImage);
+    }
 
-    dragImage = dragImage.cloneNode(true) as Element;
-    const dragStyles = (dragImage as any).style;
-    dragStyles.width = this.pieceOuterSize + 'px';
-    dragStyles.position = 'absolute';
-    dragStyles.top = '-1000px';
+    var clientRect = (e.target! as HTMLElement).getBoundingClientRect();
+    this.dragOffsetX = e.clientX - clientRect.left;
+    this.dragOffsetY = e.clientY - clientRect.top;
 
-    document.body.append(dragImage);
+    let correctionX = 0;
+    let correctionY = 0;
 
-    e.dataTransfer!.setDragImage(dragImage, e.offsetX, e.offsetY);
+    if (navigator.userAgent.match(/Firefox/)) {
+      if (window.devicePixelRatio == 1) {
+        // Firefox...
+        correctionX = 330;
+        correctionY = 330;
+      } else {
+        // Firefox on retina... I don't even
+      }
+    }
+    // console.log(this.dragOffsetX * window.devicePixelRatio,' => ', this.dragOffsetX * window.devicePixelRatio+correctionX);
+    // console.log(this.dragOffsetY * window.devicePixelRatio,' => ', this.dragOffsetY* window.devicePixelRatio+correctionY);
+    e.dataTransfer!.setDragImage(
+      this.dragImage,
+      this.dragOffsetX * window.devicePixelRatio + correctionX,
+      this.dragOffsetY * window.devicePixelRatio + correctionY
+    );
     e.dataTransfer!.effectAllowed = 'move';
 
     requestAnimationFrame(() => (puzzlePieze.style.display = 'none'));
 
     this.dragPuzzlePiece = puzzlePieze;
     this.dragPiece = piece;
-    this.dragImage = dragImage;
-    this.dragOffsetX = e.offsetX;
-    this.dragOffsetY = e.offsetY;
-  }
 
 }
