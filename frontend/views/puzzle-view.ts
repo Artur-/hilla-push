@@ -1,12 +1,14 @@
+
 import { CursorTracker } from 'Frontend/generated/endpoints';
 import Cursor from 'Frontend/generated/org/vaadin/artur/hillapush/puzzle/Cursor';
+import { getUserId } from 'Frontend/session';
 import { css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import './cursor-indicator';
+import "./fake-login";
 import './puzzle-area';
 import './puzzle-piece';
-import { Layout, View } from './view';
-import './cursor-indicator';
-import { getUserId } from 'Frontend/session';
+import { Layout } from './view';
 
 @customElement('puzzle-view')
 export class PuzzleView extends Layout {
@@ -34,6 +36,7 @@ export class PuzzleView extends Layout {
   }
   render() {
     return html`
+      <fake-login></fake-login>
       ${this.cursors.map(
         (cursor) =>
           html`<cursor-indicator
@@ -62,6 +65,6 @@ export class PuzzleView extends Layout {
     this.sendTimer = setTimeout(() => {
       CursorTracker.trackCursor(this.cursorX, this.cursorY, getUserId());
       this.sendTimer = undefined;
-    }, 100);
+    }, 200);
   }
 }

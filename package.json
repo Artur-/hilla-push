@@ -271,7 +271,8 @@
     "lit-vaadin-helpers": "$lit-vaadin-helpers",
     "a-avataaar": "$a-avataaar",
     "seedrandom": "$seedrandom",
-    "socket.io-client": "$socket.io-client"
+    "socket.io-client": "$socket.io-client",
+    "uuid": "$uuid"
   },
   "vaadin": {
     "dependencies": {
@@ -405,6 +406,6 @@
       "workbox-core": "6.5.0",
       "workbox-precaching": "6.5.0"
     },
-    "hash": "8715fda5034f132f9fa7dc4d9bdcade020ef8037ff4998ab6e077f57238600aa"
+    "hash": "c61628e90556f71e093bd0c4e677178185c76170eb15dce19670b37d4fa40033"
   }
 }
