@@ -33,6 +33,8 @@ export class PuzzlePiece extends LitElement {
   pieceId = -1;
   @property({ type: Boolean })
   correctlyPlaced = false;
+  @property({ type: Boolean })
+  hidden = false;
 
   static get styles() {
     return css`
@@ -44,7 +46,9 @@ export class PuzzlePiece extends LitElement {
     `;
   }
   render() {
-    return svg`<svg style="width: 100%;fill:none;stroke:#000000;stroke-width:0.5px;" viewbox="-15 -15 80 80">
+    return svg`<svg style="width: 100%;fill:none;stroke:#000000;stroke-width:0.5px;${
+      this.hidden ? 'display: none' : ''
+    }" viewbox="-15 -15 80 80">
         <defs>
           <path id="path${this.pieceId}" d="M 0 0 ${horizontalPaths[this.top]} ${rotate(horizontalPaths[this.right])} 
           ${reverseX(horizontalPaths[this.bottom])} ${reverseY(rotate(horizontalPaths[this.left]))}

@@ -19,7 +19,7 @@ public class Piece {
 
     private int imageX;
     private int imageY;
-    private boolean correctlyPlaced;
+    private boolean correctlyPlaced, dragging;
     private int zIndex;
 
     public int getId() {
@@ -116,6 +116,14 @@ public class Piece {
 
     public boolean isCorrectlyPlaced() {
         return correctlyPlaced;
+    }
+
+    public void setDragging(boolean dragging) {
+        this.dragging = dragging;
+    }
+
+    public boolean isDragging() {
+        return dragging;
     }
 
     public int getzIndex() {

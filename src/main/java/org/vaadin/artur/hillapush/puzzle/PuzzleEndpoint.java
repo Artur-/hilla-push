@@ -34,6 +34,10 @@ public class PuzzleEndpoint {
         return info;
     }
 
+    public void startDrag(int id) {
+        puzzleService.startDrag(id);
+    }
+
     public void dropPieceAt(int id, DropInfo dropInfo) {
         puzzleService.dropPieceAt(id, dropInfo);
 

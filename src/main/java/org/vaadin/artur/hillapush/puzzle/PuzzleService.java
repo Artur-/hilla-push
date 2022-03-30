@@ -1,6 +1,8 @@
 package org.vaadin.artur.hillapush.puzzle;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -124,6 +126,18 @@ public class PuzzleService {
         fireEvent();
     }
 
+    public void startDrag(int id) {
+        modify(pieces -> {
+            Optional<Piece> maybePiece = pieces.stream().filter(p -> p.id == id).findFirst();
+            if (!maybePiece.isPresent()) {
+                getLogger().warn("Tried to move non-existing piece with id " + id);
+                return;
+            }
+            Piece piece = maybePiece.get();
+            piece.setDragging(true);
+        });
+    }
+
     public void dropPieceAt(int id, DropInfo dropInfo) {
         modify(pieces -> {
             Optional<Piece> maybePiece = pieces.stream().filter(p -> p.id == id).findFirst();
@@ -132,6 +146,7 @@ public class PuzzleService {
                 return;
             }
             Piece piece = maybePiece.get();
+            piece.setDragging(false);
             if (isCorrectPlace(piece, dropInfo.getGridX(), dropInfo.getGridY())) {
                 piece.setLeft(slotCoordinate(dropInfo.getGridX()));
                 piece.setTop(slotCoordinate(dropInfo.getGridY()));
@@ -139,8 +154,8 @@ public class PuzzleService {
             } else {
                 piece.setLeft(dropInfo.getX());
                 piece.setTop(dropInfo.getY());
+                piece.setzIndex(1 + Collections.max(pieces, Comparator.comparing(p -> p.getzIndex())).getzIndex());
             }
-
             if (_isCompleted(pieces)) {
                 new Thread(() -> {
                     try {
@@ -178,5 +193,6 @@ public class PuzzleService {
     private boolean isCorrectPlace(Piece piece, int gridX, int gridY) {
         return piece.getX() == gridX && piece.getY() == gridY;
     }
+
 
 }

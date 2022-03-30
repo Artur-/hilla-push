@@ -103,6 +103,7 @@ export class PuzzleArea extends Layout {
               .correctlyPlaced=${piece.correctlyPlaced}
               .image=${this.image}
               .pieceImageSize=${this.pieceImageSize}
+              .hidden=${piece.dragging}
             ></puzzle-piece>`;
           })}
         </div>
@@ -187,9 +188,10 @@ export class PuzzleArea extends Layout {
     );
     e.dataTransfer!.effectAllowed = 'move';
 
-    requestAnimationFrame(() => (puzzlePieze.style.display = 'none'));
+    PuzzleEndpoint.startDrag(piece.id);
+    // requestAnimationFrame(() => (puzzlePieze.style.display = 'none'));
 
     this.dragPuzzlePiece = puzzlePieze;
     this.dragPiece = piece;
-
+  }
 }
