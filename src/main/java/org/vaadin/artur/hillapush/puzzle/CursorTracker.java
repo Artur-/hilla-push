@@ -13,6 +13,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.socket.WebSocketSession;
 import org.vaadin.artur.hillapush.sessiontracker.ActiveUserTracker;
 import org.vaadin.artur.hillapush.sessiontracker.ActiveUserTracker.SessionInfo;
 
@@ -37,36 +38,35 @@ public class CursorTracker {
     private static final String[] colors = new String[] { "red", "green", "blue", "brown", "magenta" };
 
     @Autowired
-    public CursorTracker(HttpSession httpSession, ActiveUserTracker activeUserTracker) {
-        this.httpSession = httpSession;
+    public CursorTracker(ActiveUserTracker activeUserTracker,
+            HttpSession httpSession) {
         this.activeUserTracker = activeUserTracker;
+        this.httpSession = httpSession;
 
         sink = Sinks.many().multicast().directBestEffort();
         flux = sink.asFlux();
 
-        activeUserTracker.getActiveUsers().subscribe(event -> {
-            KeySetView<String, SessionInfo> activeSessionIds = event.getUsers().keySet();
-            cursors.keySet().removeIf(sessionId -> !activeSessionIds.contains(sessionId));
-        });
+        // activeUserTracker.getActiveUsers().subscribe(event -> {
+        // KeySetView<String, SessionInfo> activeSessionIds = event.getUsers().keySet();
+        // cursors.keySet().removeIf(sessionId ->
+        // !activeSessionIds.contains(sessionId));
+        // });
     }
 
     @Nonnull
-    public Flux<@Nonnull List<@Nonnull Cursor>> subscribe() {
-        // String sessionId = httpSession.getId();
-        String sessionId="123";
+    public Flux<@Nonnull List<@Nonnull Cursor>> subscribe(String owner) {
         return flux
-                .map(cursors -> cursors.stream().filter(cursor -> !cursor.getSessionId().equals(sessionId)).toList());
+                .map(cursors -> cursors.stream().filter(cursor -> !cursor.getOwner().equals(owner)).toList());
     }
 
-    public void trackCursor(int x, int y) {
-        String sessionId = httpSession.getId();
-        Cursor cursor = cursors.computeIfAbsent(sessionId, sid -> {
+    public void trackCursor(int x, int y, String userId) {
+        Cursor cursor = cursors.computeIfAbsent(userId, sid -> {
             Cursor c = new Cursor();
-            c.setSessionId(sessionId);
-            c.setColor(colors[sessionId.charAt(0) % colors.length]);
+            c.setOwner(userId);
+            c.setColor(colors[userId.charAt(0) % colors.length]);
             return c;
         });
-        cursor.setName(activeUserTracker.getName(sessionId));
+        cursor.setName(activeUserTracker.getName(httpSession.getId()));
         cursor.setX(x);
         cursor.setY(y);
 

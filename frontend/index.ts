@@ -16,9 +16,3 @@ window.addEventListener('vaadin-router-location-changed', (e) => {
     document.title = appStore.applicationName;
   }
 });
-
-document.addEventListener('visibilitychange', () => {
-  SessionTrackerEndpoint.setTabActive(document.visibilityState == 'visible');
-});
-SessionTrackerEndpoint.setTabActive(document.visibilityState == 'visible');
-SessionTrackerEndpoint.setBrowser(window.navigator.userAgent);

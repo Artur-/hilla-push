@@ -6,6 +6,7 @@ import './puzzle-area';
 import './puzzle-piece';
 import { Layout, View } from './view';
 import './cursor-indicator';
+import { getUserId } from 'Frontend/session';
 
 @customElement('puzzle-view')
 export class PuzzleView extends Layout {
@@ -27,14 +28,20 @@ export class PuzzleView extends Layout {
   connectedCallback(): void {
     super.connectedCallback();
 
-    CursorTracker.subscribe().onNext((cursors) => {
+    CursorTracker.subscribe(getUserId()).onNext((cursors) => {
       this.cursors = cursors;
     });
   }
   render() {
     return html`
       ${this.cursors.map(
-        (cursor) => html`<cursor-indicator .x=${cursor.x} .y=${cursor.y} .color=${cursor.color} .name=${cursor.name}></cursor-indicator>`
+        (cursor) =>
+          html`<cursor-indicator
+            .x=${cursor.x}
+            .y=${cursor.y}
+            .color=${cursor.color}
+            .name=${cursor.name}
+          ></cursor-indicator>`
       )}
       <puzzle-area
         @dragover=${this.trackCursor}
@@ -53,7 +60,7 @@ export class PuzzleView extends Layout {
       return;
     }
     this.sendTimer = setTimeout(() => {
-      CursorTracker.trackCursor(this.cursorX, this.cursorY);
+      CursorTracker.trackCursor(this.cursorX, this.cursorY, getUserId());
       this.sendTimer = undefined;
     }, 100);
   }

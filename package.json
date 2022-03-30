@@ -126,11 +126,13 @@
     "lit-vaadin-helpers": "^0.3.0",
     "mobx": "^6.3.5",
     "seedrandom": "^3.0.5",
-    "socket.io-client": "4.4.1"
+    "socket.io-client": "4.4.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "3.1.0",
     "@types/seedrandom": "^3.0.2",
+    "@types/uuid": "^8.3.4",
     "@vaadin/application-theme-plugin": "./target/plugins/application-theme-plugin",
     "@vaadin/build-status-plugin": "./target/plugins/build-status-plugin",
     "@vaadin/theme-live-reload-plugin": "./target/plugins/theme-live-reload-plugin",

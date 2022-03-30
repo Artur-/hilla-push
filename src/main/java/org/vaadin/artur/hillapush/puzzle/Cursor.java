@@ -12,8 +12,7 @@ public class Cursor {
     @Nonnull
     private String name;
     @Nonnull
-    @JsonIgnore
-    private String sessionId;
+    private String owner;
 
     public float getX() {
         return x;
@@ -47,11 +46,11 @@ public class Cursor {
         this.name = name;
     }
 
-    public String getSessionId() {
-        return sessionId;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }
